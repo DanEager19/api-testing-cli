@@ -6,7 +6,7 @@ enum Methods {
 struct Request {
     uri: String,
     route: String,
-    port: u32,
+    port: i32,
     method: Methods
 }
 
@@ -23,12 +23,24 @@ impl Request {
     }
 }
 
+//CLI: api-test -p 5000 -u http://localhost -r /games -get
 fn main() {
     let req = Request {
-        uri: String::from("http://localhost"),
-        uri: String::from("/games"),
+        uri: String::from("http://localhost/"),
+        route: String::from("/games"),
         port: 5000,
         method: String::from("GET"),
     }
     println!("Hello, world!");
+}
+
+
+//read JSON response into a tmp txt file?
+fn handle_response() -> Result<String, io::Error> {
+    let f = std::fs::File::open("tmp.txt");
+
+    let mut f = match f {
+        Ok(file) => file,
+        Err(e) => return Err(e),
+    }
 }
