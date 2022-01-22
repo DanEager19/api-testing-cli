@@ -17,7 +17,7 @@ impl Request {
                 handle_response();
             },
             self.method => String::from("POST") = {
-                
+                handle_response();
             },
         }
     }
