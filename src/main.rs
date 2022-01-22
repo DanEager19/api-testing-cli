@@ -14,7 +14,7 @@ impl Request {
     fn method_type(&self.method) {
         match {
             self.method => String::from("GET") = {
-
+                handle_response();
             },
             self.method => String::from("POST") = {
                 
