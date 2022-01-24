@@ -14,6 +14,7 @@ impl Request {
         if args.len() < 4 {
             return Err("Insufficent Arguments!");
         }
+
         let uri = args[1].clone();
         let route = args[2].clone();
         let port = args[3].clone();
@@ -25,15 +26,19 @@ impl Request {
 
 #[tokio::main]
 pub async fn run(method:&str, url:&str) -> Result<(), Box<dyn Error>> {
-    eprintln!("Fetching {:?}...", url);
     if method == "GET" {
+        println!("Sending GET request to {:?}...", url);
+
         let res = reqwest::get(url)
             .await?
             .text()
             .await?;
+        
+        println!("{:?}", res);
+    } else if method == "POST" {
+    
+    }
 
-        println!("{:#?}", res);
-    };
     Ok(())
 }
 
