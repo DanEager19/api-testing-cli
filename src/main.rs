@@ -1,4 +1,3 @@
-
 use std::error::Error;
 use std::env;
 use std::process;
@@ -25,7 +24,20 @@ impl Request {
 }
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
+pub async fn run(method:&str, url:&str) -> Result<(), Box<dyn Error>> {
+    eprintln!("Fetching {:?}...", url);
+    if method == "GET" {
+        let res = reqwest::get(url)
+            .await?
+            .text()
+            .await?;
+
+        println!("{:#?}", res);
+    };
+    Ok(())
+}
+
+fn main() {
     let args: Vec<String> = env::args().collect();
     let req = Request::new(&args).unwrap_or_else(|err| {
         println!("Problem Parsing arguments: {}", err);
@@ -34,15 +46,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let url = format!("{}:{}{}", req.uri, req.port, req.route);
 
-    eprintln!("Fetching {:?}...", url);
-    if req.method == "GET" {
-        let res = reqwest::get(url)
-            .await?
-            .text()
-            .await?;
-
-        println!("{:#?}", res);
+    if let Err(e) = run(&req.method, &url) {
+        println!("Application Error: {}", e);
+        process::exit(1);
     };
-
-    Ok(())
 }
