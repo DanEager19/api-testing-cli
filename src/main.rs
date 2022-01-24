@@ -32,10 +32,11 @@ async fn main() -> Result<(), Box<dyn Error>> {
         process::exit(1);
     });
 
-    let full_uri = format!("{}:{}{}", req.uri, req.port, req.route);
-    
+    let url = format!("{}:{}{}", req.uri, req.port, req.route);
+
+    eprintln!("Fetching {:?}...", url);
     if req.method == "GET" {
-        let res = reqwest::get(full_uri)
+        let res = reqwest::get(url)
             .await?
             .text()
             .await?;
