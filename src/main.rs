@@ -1,46 +1,47 @@
-enum Methods {
-    GET,
-    POST,
-}
 
-struct Request {
+use std::error::Error;
+use std::env;
+use std::process;
+
+pub struct Request {
     uri: String,
     route: String,
-    port: i32,
-    method: Methods
+    port: String,
+    method: String
 }
 
 impl Request {
-    fn method_type(&self.method) {
-        match {
-            self.method => String::from("GET") = {
-                handle_response();
-            },
-            self.method => String::from("POST") = {
-                handle_response();
-            },
+    pub fn new(args: &[String]) -> Result<Request, &str> {
+        if args.len() < 4 {
+            return Err("Insufficent Arguments!");
         }
+        let uri = args[1].clone();
+        let route = args[2].clone();
+        let port = args[3].clone();
+        let method = args[4].clone();
+        
+        Ok(Request { uri, route, port, method })
     }
 }
 
-//CLI: api-test -p 5000 -u http://localhost -r /games -get
-fn main() {
-    let req = Request {
-        uri: String::from("http://localhost/"),
-        route: String::from("/games"),
-        port: 5000,
-        method: String::from("GET"),
-    }
-    println!("Hello, world!");
-}
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn Error>> {
+    let args: Vec<String> = env::args().collect();
+    let req = Request::new(&args).unwrap_or_else(|err| {
+        println!("Problem Parsing arguments: {}", err);
+        process::exit(1);
+    });
 
+    let full_uri = format!("{}:{}{}", req.uri, req.port, req.route);
+    
+    if req.method == "GET" {
+        let res = reqwest::get(full_uri)
+            .await?
+            .text()
+            .await?;
 
-//read JSON response into a tmp txt file?
-fn handle_response() -> Result<String, io::Error> {
-    let f = std::fs::File::open("tmp.txt");
+        println!("{:#?}", res);
+    };
 
-    let mut f = match f {
-        Ok(file) => file,
-        Err(e) => return Err(e),
-    }
+    Ok(())
 }
