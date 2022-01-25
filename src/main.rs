@@ -1,6 +1,7 @@
 use std::error::Error;
 use std::env;
 use std::process;
+use std::fs::File;
 
 pub struct Request {
     uri: String,
@@ -36,7 +37,10 @@ pub async fn run(method:&str, url:&str) -> Result<(), Box<dyn Error>> {
         
         println!("{:?}", res);
     } else if method == "POST" {
-    
+        let f = File::create("tmp.json")?;
+    } else {
+        eprintln!("No method given!");
+        process::exit(1);
     }
 
     Ok(())
