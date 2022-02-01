@@ -1,7 +1,6 @@
 use std::error::Error;
 use std::env;
 use std::process;
-use std::fs::File;
 
 pub struct Request {
     uri: String,
@@ -37,7 +36,12 @@ pub async fn run(method:&str, url:&str) -> Result<(), Box<dyn Error>> {
         
         println!("{:?}", res);
     } else if method == "POST" {
-        let f = File::create("tmp.json")?;
+        let client = reqwest::Client::new();
+        println!("Sending POST request to {:?}...", url);
+
+        let _res = client.post(url)
+            .body("hi")
+            .send();
     } else {
         eprintln!("No method given!");
         process::exit(1);
