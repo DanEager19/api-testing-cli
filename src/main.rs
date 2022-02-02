@@ -1,7 +1,6 @@
 use std::error::Error;
 use std::env;
 use std::process;
-use futures::stream::TryStreamExt;
 use reqwest::{Body};
 use tokio::fs::File;
 use tokio_util::codec::{BytesCodec, FramedRead};
@@ -29,6 +28,20 @@ impl Request {
 }
 
 #[tokio::main]
+pub async fn get_request(url:&str) -> Result<(), Box<dyn std::error::Error>> {
+    println!("Sending GET request to {:?}...", url);
+    
+    let res = reqwest::get(url)
+    .await?
+    .text()
+    .await?;
+    
+    println!("{:?}", res);
+    
+    Ok(())
+}
+
+#[tokio::main]
 pub async fn post_request(url:&str) -> Result<(), Box<dyn std::error::Error>> {
     println!("Sending POST request to {:?}...", url);
     let file = File::open("sample.json").await?;
@@ -39,20 +52,6 @@ pub async fn post_request(url:&str) -> Result<(), Box<dyn std::error::Error>> {
         .body(file_to_body(file))
         .send()
         .await?;
-
-    Ok(())
-}
-
-#[tokio::main]
-pub async fn get_request(url:&str) -> Result<(), Box<dyn std::error::Error>> {
-    println!("Sending GET request to {:?}...", url);
-
-    let res = reqwest::get(url)
-        .await?
-        .text()
-        .await?;
-
-    println!("{:?}", res);
 
     Ok(())
 }
