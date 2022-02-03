@@ -32,9 +32,9 @@ pub async fn get_request(url:&str) -> Result<(), Box<dyn std::error::Error>> {
     println!("Sending GET request to {:?}...", url);
     
     let res = reqwest::get(url)
-    .await?
-    .text()
-    .await?;
+        .await?
+        .text()
+        .await?;
     
     println!("{:?}", res);
     
@@ -45,13 +45,15 @@ pub async fn get_request(url:&str) -> Result<(), Box<dyn std::error::Error>> {
 pub async fn post_request(url:&str) -> Result<(), Box<dyn std::error::Error>> {
     println!("Sending POST request to {:?}...", url);
     let file = File::open("sample.json").await?;
-
     let client = reqwest::Client::new();
-    let _res = client
+
+    let res = client
         .post(url)
         .body(file_to_body(file))
         .send()
         .await?;
+        
+    println!("{:?}", res);
 
     Ok(())
 }
