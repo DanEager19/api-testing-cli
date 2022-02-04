@@ -1,10 +1,11 @@
+use text_io::read;
 use std::error::Error;
-use std::env;
 use std::process;
-use reqwest::{Body};
-use tokio::fs::File;
-use tokio_util::codec::{BytesCodec, FramedRead};
+use reqwest;
+use clap::Parser;
+use std::collections::HashMap;
 
+#[derive(Parser)]
 pub struct Request {
     uri: String,
     route: String,
@@ -12,27 +13,15 @@ pub struct Request {
     method: String
 }
 
-impl Request {
-    pub fn new(args: &[String]) -> Result<Request, &str> {
-        if args.len() < 4 {
-            return Err("Insufficent Arguments!");
-        }
-
-        let uri = args[1].clone();
-        let route = args[2].clone();
-        let port = args[3].clone();
-        let method = args[4].clone();
-        
-        Ok(Request { uri, route, port, method })
-    }
-}
-
 #[tokio::main]
-pub async fn get_request(url:&str) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn get_request(url:&str) -> Result<(), Box<dyn Error>> {
     println!("Sending GET request to {:?}...", url);
-    
-    let res = reqwest::get(url)
-        .await?
+    let client = reqwest::Client::new();
+
+    let res = client.get(url)
+        .send()
+        .await
+        .unwrap()
         .text()
         .await?;
     
@@ -42,26 +31,33 @@ pub async fn get_request(url:&str) -> Result<(), Box<dyn std::error::Error>> {
 }
 
 #[tokio::main]
-pub async fn post_request(url:&str) -> Result<(), Box<dyn std::error::Error>> {
-    println!("Sending POST request to {:?}...", url);
-    let file = File::open("sample.json").await?;
-    let client = reqwest::Client::new();
+pub async fn post_request(url:&str) -> Result<(), Box<dyn Error>> {
+    let mut data = HashMap::new();
+    let mut i: i32 = 0;
 
-    let res = client
-        .post(url)
-        .body(file_to_body(file))
+    println!("How many data entries?");
+    let loop_count: i32 = read!();
+
+    while i < loop_count {
+        println!("Enter the name: ");
+        let name: String = read!();
+        println!("Enter the value: ");
+        let value: String = read!();
+
+        data.insert(name, value);
+        i += 1;
+    }
+    println!("Sending POST request to {:?}...", url);
+    let client = reqwest::Client::new();
+    let res = client.post(url)
+        .header("CONTENT_TYPE", "application/json")
+        .json(&data)
         .send()
         .await?;
         
     println!("{:?}", res);
 
     Ok(())
-}
-
-fn file_to_body(file: File) -> Body {
-    let stream = FramedRead::new(file, BytesCodec::new());
-    let body = Body::wrap_stream(stream);
-    body
 }
 
 pub fn run(method:&str, url:&str) -> Result<(), Box<dyn Error>> {
@@ -84,11 +80,7 @@ pub fn run(method:&str, url:&str) -> Result<(), Box<dyn Error>> {
 }
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let req = Request::new(&args).unwrap_or_else(|err| {
-        println!("Problem Parsing arguments: {}", err);
-        process::exit(1);
-    });
+    let req = Request::parse();
 
     let url = format!("{}:{}{}", req.uri, req.port, req.route);
 
