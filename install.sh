@@ -1,3 +1,3 @@
 #!/bin/sh
 cargo build
-cp ./target/release/api-testing-cli /usr/bin
+cp ./target/release/atc /usr/bin
