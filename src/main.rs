@@ -5,11 +5,19 @@ use reqwest;
 use clap::Parser;
 use std::collections::HashMap;
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
+#[clap(author="Daniel Eager", version="1.0", about="Simple API testing CLI.", long_about= None)]
 pub struct Request {
-    uri: String,
+    #[clap(short='p', long="protocol")]
+    protocol: String,
+
+    #[clap(short='d', long="destination")]
+    dest: String,
+
+    #[clap(short='r', long="route")]
     route: String,
-    port: String,
+
+    #[clap(short='m', long="method")]
     method: String
 }
 
@@ -82,8 +90,7 @@ pub fn run(method:&str, url:&str) -> Result<(), Box<dyn Error>> {
 fn main() {
     let req = Request::parse();
 
-    let url = format!("{}:{}{}", req.uri, req.port, req.route);
-
+    let url = format!("{}://{}{}", &req.protocol, &req.dest, &req.route);
     if let Err(e) = run(&req.method, &url) {
         println!("Application Error: {}", e);
         process::exit(1);
