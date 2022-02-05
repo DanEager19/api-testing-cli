@@ -1,4 +1,4 @@
-<h1 align="center">Welcome to api-testing-cli 👋</h1>
+<h1 align="center">API testing CLI</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-1.0-blue.svg?cacheSeconds=2592000" />
   <a href="#" target="_blank">
