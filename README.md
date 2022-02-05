@@ -11,7 +11,7 @@
 ## Install
 
 ```sh
-./install.sh
+./install.bash
 ```
 
 ## Usage
