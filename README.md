@@ -27,9 +27,5 @@ atc -p <PROTOCOL> -d <DESTINATION> -r <ROUTE> -m <METHOD>
 * Website: https://deager.dev/
 * Github: [@DanEager19](https://github.com/DanEager19)
 
-## Show your support
-
-Give a ⭐️ if this project helped you!
-
 ***
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
