@@ -8,6 +8,12 @@
 
 > A simple CLI to send HTTP GET/POST requests
 
+## Dependencies
+
+```sh
+This app assumes you have the latest version of Rust installed. Additionally, you're $PATH variable is configured with the ./cargo/bin directory.
+```
+
 ## Install
 
 ```sh
