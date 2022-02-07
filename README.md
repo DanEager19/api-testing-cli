@@ -11,7 +11,8 @@
 ## Dependencies
 
 ```sh
-This app assumes you have the latest version of Rust installed. Additionally, you're $PATH variable is configured with the ./cargo/bin directory.
+This app assumes you have the latest version of Rust installed. 
+Additionally, you're $PATH variable is configured with the ./cargo/bin directory.
 ```
 
 ## Install
