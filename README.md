@@ -11,7 +11,7 @@
 ## Install
 
 ```sh
-cargo install --path ./
+git clone https://github.com/DanEager19/api-testing-cli && cargo install --path ./api-testing-cli
 ```
 
 ## Usage
