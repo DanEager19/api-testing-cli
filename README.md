@@ -12,7 +12,7 @@
 
 ```sh
 This app assumes the latest version of Rust is installed. 
-Additionally, the $PATH variable is configured with the ./cargo/bin directory.
+Additionally, the $PATH variable should be configured with the ./cargo/bin directory.
 ```
 
 ## Install
